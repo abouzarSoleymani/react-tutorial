@@ -1,6 +1,8 @@
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Welcome13 from './function-components/Welcome13'
 import StyleComponent from './style-components/StyleComponent'
+import Second from './state-component/Second'
 
 function App() {
   const userList: any = [
@@ -11,7 +13,14 @@ function App() {
   return (
     <>
       <Welcome13 users={userList} />
-      <StyleComponent />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<StyleComponent />} />
+          <Route path="/second">
+            <Route path=":number" element={<Second />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
