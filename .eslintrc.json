@@ -28,6 +28,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+      //assigned a value but never used 
+       "no-unused-vars": 0,
           // suppress errors for missing 'import React' in files
         "react/react-in-jsx-scope": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
