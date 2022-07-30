@@ -1,3 +1,4 @@
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import { IUser } from './Model'
 
 interface IProps {
@@ -7,42 +8,42 @@ interface IProps {
 }
 
 const list = (props: IProps) => {
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'name', headerName: 'Name', width: 130 },
+    { field: 'age', headerName: 'Age', width: 130 },
+    { field: 'profession', headerName: 'profession', width: 130 },
+    {
+      field: 'Action',
+      headerName: 'Action',
+      width: 230,
+      renderCell: (params): any => {
+        return (
+          <>
+            <button type="button" onClick={() => props.onEdit?.(params.row)}>
+              edit
+            </button>
+            <button type="button" onClick={() => props.onDelete?.(params.row)}>
+              delete
+            </button>
+          </>
+        )
+      },
+    },
+  ]
+
   return (
     <div className="user-table">
       <h1>View users</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>profession</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.users.length > 0 ? (
-            props.users.map((i: IUser) => (
-              <tr key={i.id}>
-                <td>{i.name}</td>
-                <td>{i.age}</td>
-                <td>{i.profession}</td>
-                <td>
-                  <button type="button" onClick={() => props.onEdit?.(i)}>
-                    edit
-                  </button>
-                  <button type="button" onClick={() => props.onDelete?.(i)}>
-                    delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={3}>no users</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={props.users}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      </div>
     </div>
   )
 }

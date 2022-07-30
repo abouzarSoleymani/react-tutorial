@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import { IBaseUser, IUser } from './Model'
 
 interface IProps {
@@ -36,56 +39,55 @@ const Edit = ({ user, onUpdateUser, setEdit, editing, onAddUser }: IProps) => {
   return (
     <div className="user-form">
       <h1>edit users</h1>
-      <form className="form-edit" onSubmit={onFormSubmit}>
-        <div className="form-row">
-          <label htmlFor="name">
-            Name
-            <input
-              type="text"
-              id="name"
-              placeholder="please input name"
-              name="name"
+      <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <div>
+          <form className="form-edit" onSubmit={onFormSubmit}>
+            <TextField
+              label="name"
+              id="outlined-size-normal"
+              defaultValue="Normal"
               value={userEdit.name}
               onChange={onInputChange}
             />
-          </label>
-
-          <div className="form-error">too short</div>
-        </div>
-        <div className="form-row">
-          <label htmlFor="profession">
-            Profession
-            <input
-              id="profession"
-              type="text"
-              placeholder="please input profession"
-              name="profession"
+            <TextField
+              label="profession"
+              id="outlined-size-normal"
+              defaultValue="Normal"
               value={userEdit.profession}
               onChange={onInputChange}
             />
-          </label>
-        </div>
-        <div className="form-row">
-          <label htmlFor="age">
-            Age
-            <input
-              id="age"
-              type="number"
-              placeholder="please input age"
-              name="age"
+            <TextField
+              label="age"
+              id="outlined-size-normal"
+              defaultValue="Normal"
               value={userEdit.age}
               onChange={onInputChange}
             />
-          </label>
+            <div className="actions-form">
+              {editing && (
+                <Button type="submit" variant="contained">
+                  Update
+                </Button>
+              )}
+              {!editing && (
+                <Button type="submit" variant="contained">
+                  Add
+                </Button>
+              )}
+              <Button variant="outlined" onClick={() => setEdit(false)}>
+                Cancel
+              </Button>
+            </div>
+          </form>
         </div>
-        <div className="form-row">
-          {editing && <button type="submit">Update</button>}
-          {!editing && <button type="submit">Add</button>}
-          <button type="button" onClick={() => setEdit(false)}>
-            Cancel
-          </button>
-        </div>
-      </form>
+      </Box>
     </div>
   )
 }
