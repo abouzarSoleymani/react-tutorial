@@ -29,6 +29,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+      // "import/prefer-default-export": 0,
       //assigned a value but never used 
        "no-unused-vars": 0,
           // suppress errors for missing 'import React' in files

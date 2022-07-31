@@ -4,24 +4,32 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import Edit from './component/Edit'
 import List from './component/List'
 import { IBaseUser, IUser } from './component/Model'
+import { fetchUsers } from './component/Users.service'
 
 const defaultUsers: Array<IUser> = []
 
 const initCurrentUser: IUser = { username: '', name: '', email: '', id: null }
 const Rootes = () => {
-  const [users, setUsers] = useState(defaultUsers)
+  const [users, setUsers] = useState<IUser[]>([])
   const [editUser, setEditUser] = useState(initCurrentUser)
   const [editing, setEdit] = useState(false)
   const navigate = useNavigate()
 
-  const fetchUsers = () => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((res) => res.json())
-      .then(setUsers)
-  }
+  // const fetchUsers = () => {
+  //   fetch('https://jsonplaceholder.typicode.com/users')
+  //     .then((res) => res.json())
+  //     .then(setUsers)
+  // }
 
   useEffect(() => {
-    fetchUsers()
+    const fetchData = async () => {
+      // Here we get users: User[]
+      const usersList = await fetchUsers()
+      setUsers(usersList)
+    }
+
+    fetchData()
+    // fetchUsers()
   }, [])
 
   const onCurrentUser = (user: IUser) => {
