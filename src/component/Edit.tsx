@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import { useParams } from 'react-router-dom'
 import { IBaseUser, IUser } from './Model'
 
 interface IProps {
@@ -9,19 +10,28 @@ interface IProps {
   onUpdateUser: (id: number | null, user: IUser) => void
   setEdit: (bool: boolean) => void
   onAddUser: (user: IBaseUser) => void
-  editing: boolean
 }
 
-const Edit = ({ user, onUpdateUser, setEdit, editing, onAddUser }: IProps) => {
+const Edit = ({ user, onUpdateUser, setEdit, onAddUser }: IProps) => {
   const [userEdit, setUser] = useState(user)
+  const { id } = useParams()
+  const editing = !!id
+  const callEditUser = () => {
+    fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .then((res) => res.json())
+      .then((resUser) => setUser(resUser))
+  }
 
   useEffect(() => {
-    setUser(user)
-  }, [user])
+    if (editing) {
+      callEditUser()
+    }
+    // setUser(user)
+  }, [])
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!userEdit.profession || !userEdit.name) {
+    if (!userEdit.username || !userEdit.name) {
       return
     }
     if (editing) {
@@ -39,35 +49,28 @@ const Edit = ({ user, onUpdateUser, setEdit, editing, onAddUser }: IProps) => {
   return (
     <div className="user-form">
       <h1>edit users</h1>
-      <Box
-        component="form"
-        sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
-        }}
-        noValidate
-        autoComplete="off"
-      >
+      <Box>
         <div>
           <form className="form-edit" onSubmit={onFormSubmit}>
             <TextField
               label="name"
+              name="name"
               id="outlined-size-normal"
-              defaultValue="Normal"
               value={userEdit.name}
               onChange={onInputChange}
             />
             <TextField
-              label="profession"
+              label="username"
+              name="username"
               id="outlined-size-normal"
-              defaultValue="Normal"
-              value={userEdit.profession}
+              value={userEdit.username}
               onChange={onInputChange}
             />
             <TextField
-              label="age"
+              label="email"
+              name="email"
               id="outlined-size-normal"
-              defaultValue="Normal"
-              value={userEdit.age}
+              value={userEdit.email}
               onChange={onInputChange}
             />
             <div className="actions-form">

@@ -1,5 +1,7 @@
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { useNavigate } from 'react-router-dom'
 import { IUser } from './Model'
+import './Edit.scss'
 
 interface IProps {
   users: Array<IUser>
@@ -8,11 +10,16 @@ interface IProps {
 }
 
 const list = (props: IProps) => {
+  const navigate = useNavigate()
+  const goToEdit = (id: number): void => {
+    navigate(`/edit/${id}`)
+  }
+
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'age', headerName: 'Age', width: 130 },
-    { field: 'profession', headerName: 'profession', width: 130 },
+    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'name', headerName: 'name', width: 200 },
+    { field: 'username', headerName: 'username', width: 150 },
+    { field: 'email', headerName: 'email', width: 200 },
     {
       field: 'Action',
       headerName: 'Action',
@@ -20,7 +27,7 @@ const list = (props: IProps) => {
       renderCell: (params): any => {
         return (
           <>
-            <button type="button" onClick={() => props.onEdit?.(params.row)}>
+            <button type="button" onClick={() => goToEdit(params.row.id)}>
               edit
             </button>
             <button type="button" onClick={() => props.onDelete?.(params.row)}>
@@ -36,13 +43,7 @@ const list = (props: IProps) => {
     <div className="user-table">
       <h1>View users</h1>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={props.users}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          checkboxSelection
-        />
+        <DataGrid rows={props.users} columns={columns} hideFooterPagination />
       </div>
     </div>
   )

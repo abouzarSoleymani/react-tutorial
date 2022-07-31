@@ -1,21 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import Edit from './component/Edit'
 import List from './component/List'
 import { IBaseUser, IUser } from './component/Model'
 
-const defaultUsers: Array<IUser> = [
-  { profession: 'lily', name: 'lily hh', id: 1, age: 18 },
-  { profession: 'bob', name: 'bob haha', id: 2, age: 19 },
-  { profession: 'bob2', name: 'bob haha', id: 3, age: 19 },
-]
+const defaultUsers: Array<IUser> = []
 
-const initCurrentUser: IUser = { profession: '', name: '', age: 10, id: null }
-
-function App() {
+const initCurrentUser: IUser = { username: '', name: '', email: '', id: null }
+const Rootes = () => {
   const [users, setUsers] = useState(defaultUsers)
   const [editUser, setEditUser] = useState(initCurrentUser)
   const [editing, setEdit] = useState(false)
+  const navigate = useNavigate()
+
+  const fetchUsers = () => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((res) => res.json())
+      .then(setUsers)
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   const onCurrentUser = (user: IUser) => {
     setEditUser(user)
@@ -23,30 +30,87 @@ function App() {
   }
 
   const onAddUser = (newUser: IBaseUser): void => {
-    const id = users.length + 1
-    setUsers([...users, { ...newUser, id }])
+    fetch(`https://jsonplaceholder.typicode.com/users`, {
+      method: 'POST',
+      body: JSON.stringify(newUser),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setUsers([...users, { ...json }])
+        navigate('/')
+      })
   }
   const onUpdateUser = (id: number | null, newUser: IUser): void => {
     setEdit(false)
-    setUsers(users.map((i) => (i.id === id ? newUser : i)))
+    fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(newUser),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setUsers(users.map((user) => (user.id === id ? json : user)))
+        navigate('/')
+      })
   }
 
   const onDeleteUser = (currentUser: IUser): void => {
-    setUsers(users.filter((i) => i.id !== currentUser.id))
+    fetch(`https://jsonplaceholder.typicode.com/users/${currentUser.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setUsers(users.filter((user) => user.id !== currentUser.id))
+      })
   }
-
   return (
-    <>
-      <h2>{`bool2: ${editing}`}</h2>
-      <List users={users} onEdit={onCurrentUser} onDelete={onDeleteUser} />
-      <Edit
-        user={editUser}
-        onUpdateUser={onUpdateUser}
-        onAddUser={onAddUser}
-        setEdit={setEdit}
-        editing={editing}
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <List users={users} onEdit={onCurrentUser} onDelete={onDeleteUser} />
+        }
       />
-    </>
+      <Route path="/edit">
+        <Route
+          path=":id"
+          element={
+            <Edit
+              user={editUser}
+              onUpdateUser={onUpdateUser}
+              onAddUser={onAddUser}
+              setEdit={setEdit}
+            />
+          }
+        />
+      </Route>
+      <Route
+        path="/add"
+        element={
+          <Edit
+            user={editUser}
+            onUpdateUser={onUpdateUser}
+            onAddUser={onAddUser}
+            setEdit={setEdit}
+          />
+        }
+      />
+    </Routes>
+  )
+}
+function App() {
+  return (
+    <BrowserRouter>
+      <Rootes />
+    </BrowserRouter>
   )
 }
 
