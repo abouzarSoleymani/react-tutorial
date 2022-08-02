@@ -27,7 +27,7 @@ const Rootes = () => {
     const fetchData = async () => {
       // Here we get users: User[]
       const usersList = await fetchUsers()
-      // setUsers(usersList)
+      setUsers(usersList)
     }
 
     fetchData()

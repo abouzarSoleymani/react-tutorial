@@ -45,7 +45,7 @@ class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: 'https://api.example.com',
+      baseURL: 'https://jsonplaceholder.typicode.com',
       headers,
       withCredentials: true,
     })
@@ -70,34 +70,36 @@ class Http {
     return this.http.request(config)
   }
 
-  get<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<R> {
-    return this.http.get<T, R>(url, config)
+  get<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<R> {
+    return this.http
+      .get<T, R>(url, config)
+      .then((response: any) => response.data)
   }
 
-  post<T = any, R = AxiosResponse<T>>(
+  post<T = any, R = T>(
     url: string,
     data?: T,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.http.post<T, R>(url, data, config)
+    return this.http
+      .post<T, R>(url, data, config)
+      .then((response: any) => response.data)
   }
 
-  put<T = any, R = AxiosResponse<T>>(
+  put<T = any, R = T>(
     url: string,
     data?: T,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.http.put<T, R>(url, data, config)
+    return this.http
+      .put<T, R>(url, data, config)
+      .then((response: any) => response.data)
   }
 
-  delete<T = any, R = AxiosResponse<T>>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<R> {
-    return this.http.delete<T, R>(url, config)
+  delete<T = any, R = T>(url: string, config?: AxiosRequestConfig): Promise<R> {
+    return this.http
+      .delete<T, R>(url, config)
+      .then((response: any) => response.data)
   }
 
   // Handle global app errors
