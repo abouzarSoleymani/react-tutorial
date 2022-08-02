@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-import Edit from './component/Edit'
+import Form from './component/Form'
 import List from './component/List'
 import { IBaseUser, IUser } from './component/Model'
 import { fetchUsers } from './component/Users.service'
+import Counter from './component/count-reducer'
+import NotFound from './component/NotFound'
 
 const defaultUsers: Array<IUser> = []
 
@@ -25,7 +27,7 @@ const Rootes = () => {
     const fetchData = async () => {
       // Here we get users: User[]
       const usersList = await fetchUsers()
-      setUsers(usersList)
+      // setUsers(usersList)
     }
 
     fetchData()
@@ -81,6 +83,7 @@ const Rootes = () => {
   }
   return (
     <Routes>
+      <Route path="*" element={<NotFound />} />
       <Route
         path="/"
         element={
@@ -91,7 +94,7 @@ const Rootes = () => {
         <Route
           path=":id"
           element={
-            <Edit
+            <Form
               user={editUser}
               onUpdateUser={onUpdateUser}
               onAddUser={onAddUser}
@@ -103,7 +106,7 @@ const Rootes = () => {
       <Route
         path="/add"
         element={
-          <Edit
+          <Form
             user={editUser}
             onUpdateUser={onUpdateUser}
             onAddUser={onAddUser}
@@ -111,6 +114,7 @@ const Rootes = () => {
           />
         }
       />
+      <Route path="/counter" element={<Counter />} />
     </Routes>
   )
 }

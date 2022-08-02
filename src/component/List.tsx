@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { IUser } from './Model'
-import './Edit.scss'
+import './List.scss'
 
 interface IProps {
   users: Array<IUser>
@@ -16,7 +16,7 @@ const list = (props: IProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'id', headerName: 'id', width: 50 },
     { field: 'name', headerName: 'name', width: 200 },
     { field: 'username', headerName: 'username', width: 150 },
     { field: 'email', headerName: 'email', width: 200 },
