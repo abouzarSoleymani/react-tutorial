@@ -1,5 +1,6 @@
 import { Button } from '@mui/material'
 import React, { useReducer, CSSProperties } from 'react'
+import useToggle from './custom-hook'
 
 export interface StylesDictionary {
   [Key: string]: CSSProperties
@@ -59,11 +60,20 @@ const counterReducer = (state: CountState, action: CountAction) => {
 // An example of using the `useReducer` hooks with our reducer function and an initial state
 const Counter: React.FC = () => {
   const [state, dispatch] = useReducer(counterReducer, { count: 0 })
+  const [isVisible, toggleVisible] = useToggle(false)
   return (
     <div style={styles.counteContainer}>
+      toggle : <h2>{`: ${isVisible}`}</h2>
       Count: {state.count}
       {/* Calling our actions on button click */}
       <div style={styles.actions}>
+        <button
+          style={styles.button}
+          type="button"
+          onClick={() => toggleVisible()}
+        >
+          toggle
+        </button>
         <Button
           style={styles.button}
           variant="outlined"
