@@ -30,6 +30,7 @@
     ],
     "rules": {
       // "import/prefer-default-export": 0,
+       "import/prefer-default-export": "off",
       //assigned a value but never used 
        "no-unused-vars": 0,
           // suppress errors for missing 'import React' in files
