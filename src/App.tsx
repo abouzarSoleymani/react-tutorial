@@ -1,128 +1,71 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-import Form from './component/Form'
-import List from './component/List'
-import { IBaseUser, IUser } from './component/Model'
-import { fetchUsers } from './component/Users.service'
-import Counter from './component/count-reducer'
-import NotFound from './component/NotFound'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import { DragDropContext, DropResult } from 'react-beautiful-dnd'
+import { useDispatch, useSelector } from 'react-redux'
+import { ToDoColumn } from './components/columns/ToDo'
+import { DoneColumn } from './components/columns/Done'
+import { InProgressColumn } from './components/columns/InProgress'
+import { todoSlice as todo } from './redux/slice/todo'
+import { inProgressSlice as inProgress } from './redux/slice/inProgress'
+import { doneSlice as done } from './redux/slice/done'
+import { StoreState } from './redux/store'
+import { IModel } from './types'
 
-const defaultUsers: Array<IUser> = []
+type TAllSilces = 'todo' | 'inProgress' | 'done'
 
-const initCurrentUser: IUser = { username: '', name: '', email: '', id: null }
-const Rootes = () => {
-  const [users, setUsers] = useState<IUser[]>([])
-  const [editUser, setEditUser] = useState(initCurrentUser)
-  const [editing, setEdit] = useState(false)
-  const navigate = useNavigate()
+function App() {
+  const dispatch = useDispatch()
+  const appState = useSelector((state: StoreState) => state)
 
-  // const fetchUsers = () => {
-  //   fetch('https://jsonplaceholder.typicode.com/users')
-  //     .then((res) => res.json())
-  //     .then(setUsers)
-  // }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // Here we get users: User[]
-      const usersList = await fetchUsers()
-      setUsers(usersList)
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return
     }
 
-    fetchData()
-    // fetchUsers()
-  }, [])
+    const { destination, source, draggableId } = result
+    const allSlices = { todo, inProgress, done }
 
-  const onCurrentUser = (user: IUser) => {
-    setEditUser(user)
-    setEdit(true)
-  }
+    if (destination.droppableId === source.droppableId) {
+      dispatch(
+        allSlices[destination.droppableId as TAllSilces].actions.reorder(result)
+      )
+    } else {
+      const [filterState] = (
+        (appState as any)[source.droppableId] as IModel[]
+      ).filter(({ id }) => id === draggableId)
 
-  const onAddUser = (newUser: IBaseUser): void => {
-    fetch(`https://jsonplaceholder.typicode.com/users`, {
-      method: 'POST',
-      body: JSON.stringify(newUser),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        setUsers([...users, { ...json }])
-        navigate('/')
-      })
-  }
-  const onUpdateUser = (id: number | null, newUser: IUser): void => {
-    setEdit(false)
-    fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(newUser),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        setUsers(users.map((user) => (user.id === id ? json : user)))
-        navigate('/')
-      })
+      dispatch(
+        allSlices[source.droppableId as TAllSilces].actions.remove(draggableId)
+      )
+      dispatch(
+        allSlices[destination.droppableId as TAllSilces].actions.update({
+          ...result,
+          filterState,
+        })
+      )
+    }
   }
 
-  const onDeleteUser = (currentUser: IUser): void => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${currentUser.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setUsers(users.filter((user) => user.id !== currentUser.id))
-      })
-  }
   return (
-    <Routes>
-      <Route path="*" element={<NotFound />} />
-      <Route
-        path="/"
-        element={
-          <List users={users} onEdit={onCurrentUser} onDelete={onDeleteUser} />
-        }
-      />
-      <Route path="/edit">
-        <Route
-          path=":id"
-          element={
-            <Form
-              user={editUser}
-              onUpdateUser={onUpdateUser}
-              onAddUser={onAddUser}
-              setEdit={setEdit}
-            />
-          }
-        />
-      </Route>
-      <Route
-        path="/add"
-        element={
-          <Form
-            user={editUser}
-            onUpdateUser={onUpdateUser}
-            onAddUser={onAddUser}
-            setEdit={setEdit}
-          />
-        }
-      />
-      <Route path="/counter" element={<Counter />} />
-    </Routes>
-  )
-}
-function App() {
-  return (
-    <BrowserRouter>
-      <Rootes />
-    </BrowserRouter>
+    <Container>
+      <Typography textAlign="center" variant="h3" mt={3} mb={5}>
+        This is a ToDo APP with Redux
+      </Typography>{' '}
+      <Grid container spacing={3} justifyContent="center">
+        <DragDropContext onDragEnd={(res) => onDragEnd(res)}>
+          <Grid item md={4}>
+            <ToDoColumn />
+          </Grid>
+          <Grid item md={4}>
+            <InProgressColumn />
+          </Grid>
+          <Grid item md={4}>
+            <DoneColumn />
+          </Grid>
+        </DragDropContext>
+      </Grid>
+    </Container>
   )
 }
 
