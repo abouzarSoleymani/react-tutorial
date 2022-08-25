@@ -1,3 +1,3 @@
-import { createCustomSlice } from './customSlice';
+import { createCustomSlice } from './customSlice'
 
-export const todoSlice = createCustomSlice('todo');
+export const todoSlice = createCustomSlice('todo')

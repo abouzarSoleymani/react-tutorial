@@ -1,20 +1,20 @@
-import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
-import { StoreState } from '../../redux/store';
-import { doneSlice } from '../../redux/slice/done';
-import ColumnLayout from '../ColumnLayout';
+import Typography from '@mui/material/Typography'
+import { useSelector } from 'react-redux'
+import { StoreState } from '../../redux/store'
+import { doneSlice } from '../../redux/slice/done'
+import ColumnLayout from '../ColumnLayout'
 
 export function DoneColumn() {
-  const { done } = useSelector((state: StoreState) => state);
+  const { done } = useSelector((state: StoreState) => state)
   const {
     actions: { completeStatus, remove, add, updateTextShowed },
-  } = doneSlice;
+  } = doneSlice
 
   return (
     <>
       <Typography mb={3}>All done tasks: {done.length}</Typography>
       <ColumnLayout
-        droppableId='done'
+        droppableId="done"
         labelText="Type 'done' item"
         completedHandler={completeStatus}
         removeHandler={remove}
@@ -23,5 +23,5 @@ export function DoneColumn() {
         updateTextShowed={updateTextShowed}
       />
     </>
-  );
+  )
 }

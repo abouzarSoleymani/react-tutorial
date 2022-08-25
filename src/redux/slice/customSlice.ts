@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
-import { TActionSlice, TUpdateTextShowed, IModel } from '../../types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { v4 as uuidv4 } from 'uuid'
+import { TActionSlice, TUpdateTextShowed, IModel } from '../../types'
 
-const initialState: IModel[] = [];
+const initialState: IModel[] = []
 
 export const createCustomSlice = (name: string) => {
   const {
@@ -14,7 +14,7 @@ export const createCustomSlice = (name: string) => {
     reducers: {
       add: {
         reducer: (state, action: PayloadAction<IModel>) => {
-          state.push(action.payload);
+          state.push(action.payload)
         },
         prepare: (text: string) => ({
           payload: {
@@ -31,30 +31,30 @@ export const createCustomSlice = (name: string) => {
           action.payload.destination.index,
           0,
           action.payload.filterState
-        );
+        )
       },
       remove(state, action: PayloadAction<string>) {
-        const index = state.findIndex(({ id }) => id === action.payload);
-        state.splice(index, 1);
+        const index = state.findIndex(({ id }) => id === action.payload)
+        state.splice(index, 1)
       },
       completeStatus(state, action: PayloadAction<TActionSlice>) {
-        const index = state.findIndex(({ id }) => id === action.payload.id);
-        state[index].isFinished = action.payload.isFinished;
-        state[index].updatedAt = action.payload.updatedAt;
+        const index = state.findIndex(({ id }) => id === action.payload.id)
+        state[index].isFinished = action.payload.isFinished
+        state[index].updatedAt = action.payload.updatedAt
       },
       updateTextShowed(state, action: PayloadAction<TUpdateTextShowed>) {
-        const index = state.findIndex(({ id }) => id === action.payload.id);
-        state[index].isTextShowed = action.payload.isTextShowed;
+        const index = state.findIndex(({ id }) => id === action.payload.id)
+        state[index].isTextShowed = action.payload.isTextShowed
       },
       reorder(state, action) {
-        const [removed] = state.splice(action.payload.source.index, 1);
-        state.splice(action.payload.destination.index, 0, removed);
+        const [removed] = state.splice(action.payload.source.index, 1)
+        state.splice(action.payload.destination.index, 0, removed)
       },
     },
-  });
+  })
 
   return {
     actions: { add, remove, completeStatus, reorder, update, updateTextShowed },
     reducer,
-  };
-};
+  }
+}

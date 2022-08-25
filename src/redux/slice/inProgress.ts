@@ -1,3 +1,3 @@
-import { createCustomSlice } from './customSlice';
+import { createCustomSlice } from './customSlice'
 
-export const inProgressSlice = createCustomSlice('progress');
+export const inProgressSlice = createCustomSlice('progress')

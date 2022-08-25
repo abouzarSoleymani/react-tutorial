@@ -1,7 +1,7 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { doneSlice } from '../slice/done';
-import { inProgressSlice } from '../slice/inProgress';
-import { todoSlice } from '../slice/todo';
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import { doneSlice } from '../slice/done'
+import { inProgressSlice } from '../slice/inProgress'
+import { todoSlice } from '../slice/todo'
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -9,7 +9,7 @@ export const store = configureStore({
     inProgress: inProgressSlice.reducer,
     todo: todoSlice.reducer,
   }),
-});
+})
 
-export type StoreDispatch = typeof store.dispatch;
-export type StoreState = ReturnType<typeof store.getState>;
+export type StoreDispatch = typeof store.dispatch
+export type StoreState = ReturnType<typeof store.getState>

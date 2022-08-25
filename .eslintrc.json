@@ -29,6 +29,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+      "no-param-reassign": 0,
       // "import/prefer-default-export": 0,
        "import/prefer-default-export": "off",
       //assigned a value but never used 

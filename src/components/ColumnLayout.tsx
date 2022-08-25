@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { useDispatch } from 'react-redux';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { StoreDispatch } from '../redux/store';
-import { IColumnLayoutProps } from '../types';
+import React, { useState } from 'react'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+import { useDispatch } from 'react-redux'
+import { Droppable, Draggable } from 'react-beautiful-dnd'
+import { StoreDispatch } from '../redux/store'
+import { IColumnLayoutProps } from '../types'
 
 const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   labelText,
@@ -28,15 +28,15 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
   const [isError, setIsError] = useState({
     isShow: false,
     text: '',
-  });
+  })
 
-  const [textDescription, setTextDescription] = useState('');
-  const dispatch = useDispatch<StoreDispatch>();
+  const [textDescription, setTextDescription] = useState('')
+  const dispatch = useDispatch<StoreDispatch>()
 
   const handleOnChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setTextDescription(value);
+    setTextDescription(value)
 
     setIsError({
       isShow: value.length > 200,
@@ -44,19 +44,19 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         value.length > 200
           ? 'The input value cannot be more than 200 characters'
           : '',
-    });
-  };
+    })
+  }
 
   const handleOnBlur = () => {
-    setIsError({ ...isError, isShow: false });
-  };
+    setIsError({ ...isError, isShow: false })
+  }
 
   const handleOnClick = () => {
     if (!isError.isShow) {
-      dispatch(addHandler(textDescription));
-      setTextDescription('');
+      dispatch(addHandler(textDescription))
+      setTextDescription('')
     }
-  };
+  }
 
   const handleInputKeyDown = ({
     target,
@@ -67,18 +67,18 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         (target as HTMLInputElement).value.length > 0 &&
         (target as HTMLInputElement).value.length <= 200
       ) {
-        handleOnClick();
+        handleOnClick()
       } else {
         setIsError({
           isShow: true,
           text: 'The input value cannot be empty',
-        });
+        })
       }
     }
-  };
+  }
 
   return (
-    <Box borderRadius={1} width='100%' sx={{ boxShadow: 2, p: 3 }}>
+    <Box borderRadius={1} width="100%" sx={{ boxShadow: 2, p: 3 }}>
       <TextField
         fullWidth
         label={labelText}
@@ -86,22 +86,22 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         onBlur={handleOnBlur}
         onKeyDown={handleInputKeyDown}
         value={textDescription}
-        variant='outlined'
-        size='small'
+        variant="outlined"
+        size="small"
       />
 
       <Collapse in={isError.isShow}>
-        <Alert severity='error' sx={{ my: 1 }}>
+        <Alert severity="error" sx={{ my: 1 }}>
           {isError.text}
         </Alert>
       </Collapse>
 
-      <Box width='100%' display='flex' justifyContent='center'>
+      <Box width="100%" display="flex" justifyContent="center">
         <Button
-          size='medium'
+          size="medium"
           sx={{ my: 1, maxWidth: 200 }}
-          variant='outlined'
-          color='primary'
+          variant="outlined"
+          color="primary"
           fullWidth
           onClick={handleOnClick}
           onKeyDown={({ key }) => key === 'Enter' && handleOnClick()}
@@ -178,21 +178,21 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                         </IconButton>
 
                         <Box
-                          component='span'
-                          width='100%'
-                          position='absolute'
-                          top='0'
-                          fontSize='.7rem'
+                          component="span"
+                          width="100%"
+                          position="absolute"
+                          top="0"
+                          fontSize=".7rem"
                         >
                           {updatedAt ? 'Updated' : 'Created'} at:{' '}
                           {updatedAt || createdAt}
                         </Box>
 
-                        <Box component='span' width='100%'>
+                        <Box component="span" width="100%">
                           {text}
                         </Box>
 
-                        <Box display='flex' component='span'>
+                        <Box display="flex" component="span">
                           <IconButton
                             onClick={() => dispatch(removeHandler(id))}
                           >
@@ -203,7 +203,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                             />
                           </IconButton>
                           <Checkbox
-                            edge='end'
+                            edge="end"
                             value={isFinished}
                             checked={isFinished}
                             inputProps={{ 'aria-label': 'controlled' }}
@@ -221,7 +221,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
                       </ListItemText>
                       <Collapse in={isTextShowed}>
                         You can add here some content{' '}
-                        <span role='img' aria-label='emoji'>
+                        <span role="img" aria-label="emoji">
                           😍
                         </span>
                       </Collapse>
@@ -235,7 +235,7 @@ const ColumnLayout: React.FC<IColumnLayoutProps> = ({
         )}
       </Droppable>
     </Box>
-  );
-};
+  )
+}
 
-export default ColumnLayout;
+export default ColumnLayout
