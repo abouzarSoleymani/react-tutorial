@@ -2,20 +2,35 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IUser } from '../api/types'
 
 interface IUserState {
-  user: IUser | null
+  userInfo: IUser | null
+  isLoggedIn: boolean
+  loading: boolean
+  rules: string[]
+}
+export const userInfo = () => {
+  const user = localStorage.getItem('userInfo')
+  return user ? JSON.parse(user) : null
 }
 
 const initialState: IUserState = {
-  user: null,
+  userInfo: userInfo() ? userInfo() : null,
+  isLoggedIn: false,
+  loading: false,
+  rules: ['user'],
 }
 
 export const userSlice = createSlice({
   initialState,
   name: 'userSlice',
   reducers: {
-    logout: () => initialState,
+    logout: (state) => {
+      state.userInfo = null
+      localStorage.removeItem('userInfo')
+    },
     login: (state, action: PayloadAction<IUser>) => {
-      state.user = action.payload
+      state.userInfo = action.payload
+      localStorage.setItem('userInfo', JSON.stringify(action.payload))
+      state.isLoggedIn = true
     },
   },
 })

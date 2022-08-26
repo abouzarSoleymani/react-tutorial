@@ -8,27 +8,52 @@ import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { userLogin } from '../redux/features/userActions'
 import { useAppDispatch } from '../redux'
+import { FormInputText } from './form-components/FormInputText'
 
-type LoginProps = {
-  handleSubmit: (form: any) => void
+interface IFormInput {
+  username: string
+  password: string
 }
 
-const Login = ({ handleSubmit }: LoginProps) => {
-  const dispatch = useAppDispatch()
+const defaultValues = {
+  username: 'ali',
+  password: '123456',
+}
 
-  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const target = e.target as typeof e.target & {
-      username: { value: string }
-      password: { value: string }
-    }
-    const username = target.username.value
-    const password = target.password.value
-    handleSubmit({ username, password })
-    const user = { username, password }
-    dispatch(userLogin(user))
+const Login = () => {
+  const validationSchema = Yup.object().shape({
+    username: Yup.string()
+      .required('Username is required')
+      .min(6, 'Username must be at least 6 characters')
+      .max(20, 'Username must not exceed 20 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters')
+      .max(40, 'Password must not exceed 40 characters'),
+  })
+
+  const dispatch = useAppDispatch()
+  const methods = useForm<IFormInput>({
+    defaultValues,
+    resolver: yupResolver(validationSchema),
+  })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = methods
+  const onSubmit = (data: IFormInput) => {
+    console.log(data)
+    dispatch(userLogin(data))
   }
 
   return (
@@ -48,34 +73,35 @@ const Login = ({ handleSubmit }: LoginProps) => {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <Box component="form" noValidate onSubmit={onFormSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ mt: 3 }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
+              <FormInputText
+                {...register('username')}
+                control={control}
+                label="username"
               />
+              <div className="invalid-feedback">{errors.username?.message}</div>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
+              <FormInputText
+                {...register('password')}
                 type="password"
-                id="password"
-                autoComplete="new-password"
+                control={control}
+                label="password"
               />
+              <div className="invalid-feedback">{errors.password?.message}</div>
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
+            type="submit"
             sx={{ mt: 3, mb: 2 }}
           >
             Login
