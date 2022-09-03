@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAppSelector } from '../redux'
+import { useAppSelector } from '../../redux'
 
 type ProtectedRouteProps = {
   allowedRoles: string[]
